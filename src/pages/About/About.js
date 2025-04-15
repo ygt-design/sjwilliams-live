@@ -212,7 +212,7 @@ const About = () => {
           </div>
         </div>
         <div className={styles.clientTextContainer}>
-          <h2 className={styles.clientTextTitle}>Clients</h2>
+          <h2 className={styles.clientTextTitle}>Clients / Features </h2>
           <p className={styles.clientParagraph}>{clientText}</p>
         </div>
       </div>
