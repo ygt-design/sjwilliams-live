@@ -46,7 +46,50 @@ const Gallery = () => {
             block.class.toLowerCase() === "image" &&
             (block.image?.original?.url || block.image?.url)
         );
-        setImages(imageBlocks);
+
+        const videoBlocks = allContents.filter((block) => {
+          const titleMatch = true; // Allow all blocks to be considered if they contain a valid video link
+          const sourceUrl = block.source?.url || "";
+          const content = block.content || "";
+          const embedUrl = block.embed?.url || "";
+          const hasVideo = [sourceUrl, content, embedUrl].some(
+            (text) =>
+              typeof text === "string" &&
+              (text.includes("youtu") || text.includes("vimeo"))
+          );
+          return titleMatch && hasVideo;
+        });
+
+        const getEmbedUrl = (url) => {
+          if (url.includes("youtube.com/watch?v=")) {
+            return url.replace("watch?v=", "embed/");
+          }
+          if (url.includes("youtu.be/")) {
+            const videoId = url.split("youtu.be/")[1];
+            return `https://www.youtube.com/embed/${videoId}`;
+          }
+          if (url.includes("vimeo.com")) {
+            const videoId = url.split("vimeo.com/")[1];
+            return `https://player.vimeo.com/video/${videoId}`;
+          }
+          return url;
+        };
+
+        const normalizedVideoBlocks = videoBlocks.map((block) => {
+          const raw =
+            block.source?.url?.trim() ||
+            block.content?.trim() ||
+            block.embed?.url?.trim() ||
+            "";
+          const embedUrl = getEmbedUrl(raw);
+          return {
+            ...block,
+            class: "video",
+            embedUrl,
+          };
+        });
+
+        setImages([...imageBlocks, ...normalizedVideoBlocks]);
       } catch (err) {
         console.error("Error fetching gallery channel:", err);
         setError("Error fetching gallery data.");
@@ -86,16 +129,37 @@ const Gallery = () => {
         {images.length > 0 ? (
           <div className={styles.galleryGrid}>
             {images.map((block, index) => {
-              const imageUrl = block.image?.original?.url || block.image?.url;
-              return imageUrl ? (
-                <div
-                  key={index}
-                  className={styles.galleryItem}
-                  onClick={() => setSelectedImage(imageUrl)}
-                >
-                  <img src={imageUrl} alt={block.title || `Image ${index}`} />
-                </div>
-              ) : null;
+              if (block.class.toLowerCase() === "image") {
+                const imageUrl = block.image?.original?.url || block.image?.url;
+                return imageUrl ? (
+                  <div
+                    key={index}
+                    className={styles.galleryItem}
+                    onClick={() => setSelectedImage(imageUrl)}
+                  >
+                    <img src={imageUrl} alt={block.title || `Image ${index}`} />
+                  </div>
+                ) : null;
+              } else if (block.class.toLowerCase() === "video") {
+                return (
+                  <div key={`vid-${index}`} className={styles.galleryVideo}>
+                    <iframe
+                      src={`${
+                        block.embedUrl
+                      }?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&loop=1&playlist=${
+                        block.embedUrl.split("/embed/")[1] || ""
+                      }`}
+                      title={`Video ${index + 1}`}
+                      width="100%"
+                      height="400"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                );
+              }
+              return null;
             })}
           </div>
         ) : (
