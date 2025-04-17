@@ -230,9 +230,11 @@ const About = () => {
                 (clientText || "")
                   .replace(/\s{2,}/g, (match) => "&nbsp;".repeat(match.length))
                   .replace(
-                    /\[\s*([^\]]+?)\s*\]\s*\(\s*(https?:\/\/[^)]+)\s*\)/g,
+                    /\[\s*([^\]]+?)\s*\]\s*\(\s*(.*?)\s*\)/g,
                     (_, text, url) =>
-                      `<li><a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a></li>`
+                      url
+                        ? `<li><a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a></li>`
+                        : `<li>${text}</li>`
                   ) +
                 "</ul>",
             }}
