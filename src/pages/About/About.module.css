@@ -80,9 +80,31 @@
     font-size: 1.125rem;
 }
 
-.clientParagraph{
+.clientParagraph {
     font-size: 1.125rem;
-    white-space: pre-wrap;
+    white-space: normal;
+    line-height: 1.6;
+}
+
+.clientParagraph ul {
+    margin-left: 20px;
+    list-style: none;
+    padding: 0;
+}
+
+.clientParagraph ul li {
+    margin-bottom: -30px;
+}
+
+.clientParagraph ul li a {
+    font-size: 1.125rem;
+    white-space: normal;
+    text-decoration: none;
+}
+
+.clientParagraph ul li a:hover {
+    color: magenta;
+    text-decoration: underline;
 }
 
 .contactParagraph,

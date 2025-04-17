@@ -12,7 +12,7 @@ const WorkItem = ({ channel, index }) => {
     const fetchFullChannel = async () => {
       setLoading(true);
       try {
-        const perPage = 100;
+        const perPage = 500;
         let page = 1;
         let allContents = [];
         let fetchedData = null;

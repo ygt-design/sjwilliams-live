@@ -31,7 +31,7 @@ const About = () => {
     const fetchAboutChannel = async () => {
       try {
         setLoading(true);
-        const perPage = 100;
+        const perPage = 500;
         let page = 1;
         let allContents = [];
         let fetchedData = null;
@@ -56,6 +56,11 @@ const About = () => {
           page++;
         } while (allContents.length < fetchedData.contents_count);
         const fullChannel = { ...fetchedData, contents: allContents };
+        console.log("Fetched About Channel:", fullChannel);
+
+        fullChannel.contents.forEach((block, i) => {
+          console.log(`Block ${i}: title="${block.title}", id=${block.id}`);
+        });
 
         const aboutBlock = fullChannel.contents.find(
           (block) =>
@@ -68,9 +73,11 @@ const About = () => {
         }
 
         const clientBlock = fullChannel.contents.find(
-          (block) => block.id == "35613016"
+          (block) => block.title?.trim().toLowerCase() === "clients"
         );
+
         if (clientBlock) {
+          console.log("Found Client Block:", clientBlock);
           setClientText(
             clientBlock.text ||
               clientBlock.content ||
@@ -201,19 +208,35 @@ const About = () => {
               <li>Event Planning & Curation</li>
             </ul>
             <br />
-            <h3> Project + Client Management</h3>
+            <h3>Tech proficiency</h3>
             <ul>
               <li>Adobe Creative Cloud (Photoshop, InDesign, Illustrator)</li>
               <li>Figma</li>
-              <li> Canva </li>
+              <li>Canva </li>
               <li>Microsoft Office Suite</li>
               <li>iMovie</li>
+              <li>CaptureOne</li>
+              <li>Google Suite</li>
             </ul>
           </div>
         </div>
         <div className={styles.clientTextContainer}>
           <h2 className={styles.clientTextTitle}>Clients / Features </h2>
-          <p className={styles.clientParagraph}>{clientText}</p>
+          <div
+            className={styles.clientParagraph}
+            dangerouslySetInnerHTML={{
+              __html:
+                "<ul>" +
+                (clientText || "")
+                  .replace(/\s{2,}/g, (match) => "&nbsp;".repeat(match.length))
+                  .replace(
+                    /\[\s*([^\]]+?)\s*\]\s*\(\s*(https?:\/\/[^)]+)\s*\)/g,
+                    (_, text, url) =>
+                      `<li><a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a></li>`
+                  ) +
+                "</ul>",
+            }}
+          ></div>
         </div>
       </div>
     </div>

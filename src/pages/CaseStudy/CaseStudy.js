@@ -43,7 +43,7 @@ const CaseStudy = () => {
       try {
         setLoading(true);
         // Increase perPage to 500 so that all blocks are fetched.
-        const perPage = 500;
+        const perPage = 1000;
         let page = 1;
         let allContents = [];
         let fetchedData = null;
@@ -172,8 +172,6 @@ const CaseStudy = () => {
   const pictureBlocks = channel.contents.filter(
     (block) => block.title && block.title.trim().toLowerCase() === "picture"
   );
-
-  // Search for blocks titled exactly "medium" and "client".
   const mediumBlock = channel.contents.find(
     (block) => block.title && block.title.trim().toLowerCase() === "medium"
   );
@@ -262,7 +260,6 @@ const CaseStudy = () => {
               .replace(/\s{2,}/g, (match) => "&nbsp;".repeat(match.length)),
           }}
         ></div>
-        {/* Render 3 random draggable stickers */}
         <div className={styles.stickersContainer}>
           {stickers.map((stickerItem, index) => {
             const sticker = stickerItem.sticker;
