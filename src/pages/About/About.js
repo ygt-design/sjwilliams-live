@@ -31,7 +31,7 @@ const About = () => {
     const fetchAboutChannel = async () => {
       try {
         setLoading(true);
-        const perPage = 1000;
+        const perPage = 2000;
         let page = 1;
         let allContents = [];
         let fetchedData = null;
