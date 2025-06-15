@@ -48,13 +48,15 @@ const WorkItem = ({ channel, index }) => {
     return null;
   }
 
-  const coverBlocks = fullChannel.contents.filter((block) => {
-    return block.title && block.title.trim().toLowerCase() === "cover";
-  });
+  const coverBlocks =
+    fullChannel.contents?.filter((block) => {
+      return block.title && block.title.trim().toLowerCase() === "cover";
+    }) || [];
 
-  const titleBlocks = fullChannel.contents.filter((block) => {
-    return block.title && block.title.trim().toLowerCase() === "title";
-  });
+  const titleBlocks =
+    fullChannel.contents?.filter((block) => {
+      return block.title && block.title.trim().toLowerCase() === "title";
+    }) || [];
 
   return (
     <Link
